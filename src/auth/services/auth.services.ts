@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import CustomerService from '../../services/customer.service';
 import OtpService from '../../services/otp.service';
+import { sendOtpEmail } from '../../utils/mailSender';
 import {
   LoginResponse,
   OtpValidationResponse,
@@ -10,12 +11,13 @@ import {
 class AuthService {
   private SECRET = process.env.JWT_SECRET as string;
 
-  async login(email: string): Promise<LoginResponse> {
+  async sendOtp(email: string): Promise<LoginResponse> {
     try {
       const customer = await CustomerService.getCustomerByEmail(email);
       const { code } = await OtpService.createOtp(customer.id);
+      await sendOtpEmail(email, code);
       const response = {
-        code,
+        message: 'The code has been sent to your email',
         customer: { id: customer.id, email: customer.email },
       };
       return response;
@@ -24,10 +26,7 @@ class AuthService {
     }
   }
 
-  async otpValidation(
-    email: string,
-    code: string
-  ): Promise<OtpValidationResponse> {
+  async login(email: string, code: string): Promise<OtpValidationResponse> {
     try {
       const customer = await CustomerService.getCustomerByEmail(email);
       const { id } = await OtpService.getOtpByCustomer(customer.id, code);

@@ -1,6 +1,7 @@
 import { Customer } from '@prisma/client';
 import prisma from '../utils/prisma';
 import handleErrorResponse from '../utils/handleErrorResponse';
+import { CustomerDto } from 'interfaces/Customer';
 
 class CustomerService {
   async getCustomers(): Promise<Customer[]> {
@@ -37,7 +38,15 @@ class CustomerService {
     }
   }
 
-  async createCustomer(body: any): Promise<any> {}
+  async createCustomer(customer: CustomerDto): Promise<Customer> {
+    try {
+      return await prisma.customer.create({
+        data: customer,
+      });
+    } catch (error: any) {
+      handleErrorResponse(error, 'Error creating the customer');
+    }
+  }
 }
 
 export default new CustomerService();

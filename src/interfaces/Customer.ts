@@ -1,1 +1,3 @@
-export default interface Customer {}
+export interface CustomerDto {
+  email: string;
+}

@@ -13,7 +13,7 @@ export interface AuthRequest extends Request {
 }
 
 export type LoginResponse = {
-  code: string;
+  message: string;
   customer: { id: string; email: string };
 };
 
