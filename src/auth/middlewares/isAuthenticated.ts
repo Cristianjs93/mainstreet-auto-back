@@ -34,8 +34,8 @@ async function isAuthenticated(
 
     next();
   } catch (error: any) {
-    console.log(JSON.stringify(error, null, 2));
-    res.status(500).json({ status: 500, message: error.message });
+    const message = JSON.parse(error.message);
+    res.status(message.status).json(message);
   }
 }
 

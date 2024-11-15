@@ -1,4 +1,5 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { AxiosError } from 'axios';
 
 const errorMessages = {
   P2025: {
@@ -43,7 +44,21 @@ const handleErrorResponse = (error: Error, defaultMessage: string) => {
     }
   }
 
-  throw new Error(defaultMessage);
+  if (error instanceof AxiosError) {
+    throw new Error(
+      JSON.stringify({
+        status: error.status,
+        message: error.response.data.message,
+      })
+    );
+  }
+
+  throw new Error(
+    JSON.stringify({
+      status: 500,
+      message: defaultMessage,
+    })
+  );
 };
 
 export default handleErrorResponse;
