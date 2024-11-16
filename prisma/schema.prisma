@@ -8,9 +8,19 @@ datasource db {
 }
 
 model Customer {
-  id    String @id @default(cuid())
-  email String @unique
-  OTP   OTP[]
+  id           String       @id @default(cuid())
+  shopMonkeyId String       @unique
+  firstName    String
+  lastName     String
+  email        String       @unique
+  customerType CustomerType
+  locationId   String
+  OTP          OTP[]
+}
+
+enum CustomerType {
+  Customer
+  Fleet
 }
 
 model OTP {

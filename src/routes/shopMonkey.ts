@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ShopMonkeyController from '../controllers/shopMonkey.controller';
-import isAuthenticated from '../auth/middlewares/isAuthenticated';
+import isAuthenticated from '../middlewares/isAuthenticated';
 
 const {
   getCustomers,

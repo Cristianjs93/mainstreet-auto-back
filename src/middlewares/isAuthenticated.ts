@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from '../../interfaces/Auth';
-import AuthService from '../services/auth.services';
-import CustomerService from '../../services/customer.service';
+import { AuthRequest } from '../interfaces/Auth';
+import AuthService from '../auth/services/auth.services';
+import CustomerService from '../services/customer.service';
 
 async function isAuthenticated(
   req: AuthRequest,
@@ -23,7 +23,7 @@ async function isAuthenticated(
     const decoded = AuthService.verifyToken(token);
 
     if (!decoded) {
-      res
+      return res
         .status(401)
         .json({ status: 401, message: 'Invalid or expired token' });
     }

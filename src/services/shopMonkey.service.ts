@@ -1,4 +1,5 @@
 import axiosInstance from '../utils/axiosInstance';
+import { CustomerResDto, CustomerSMDto } from '../interfaces/Customer';
 import handleErrorResponse from '../utils/handleErrorResponse';
 
 class ShopMonkeyService {
@@ -33,7 +34,7 @@ class ShopMonkeyService {
     }
   }
 
-  public async getCustomers(): Promise<any> {
+  public async getCustomers(): Promise<CustomerResDto[]> {
     try {
       await this.getToken();
       const response = await axiosInstance.post('/customer/search', {
@@ -45,13 +46,28 @@ class ShopMonkeyService {
     }
   }
 
-  public async getCustomerById(id: string): Promise<any> {
+  public async getCustomerById(id: string): Promise<CustomerResDto> {
     try {
       await this.getToken();
       const response = await axiosInstance.get(`/customer/${id}`);
       return response.data;
     } catch (error: any) {
       handleErrorResponse(error, 'Error getting the customer');
+    }
+  }
+
+  public async createCustomer(
+    newCustomer: CustomerSMDto
+  ): Promise<CustomerResDto> {
+    try {
+      await this.getToken();
+      const { data: response } = await axiosInstance.post(
+        '/customer',
+        newCustomer
+      );
+      return response.data;
+    } catch (error: any) {
+      handleErrorResponse(error, 'Error creating the customer');
     }
   }
 

@@ -1,7 +1,9 @@
-import { Customer } from '@prisma/client';
+import ShopMonkeyService from './shopMonkey.service';
 import prisma from '../utils/prisma';
+import { Customer } from '@prisma/client';
+import { CustomerReqDto, CustomerResDto } from '../interfaces/Customer';
 import handleErrorResponse from '../utils/handleErrorResponse';
-import { CustomerDto } from 'interfaces/Customer';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 class CustomerService {
   async getCustomers(): Promise<Customer[]> {
@@ -38,13 +40,33 @@ class CustomerService {
     }
   }
 
-  async createCustomer(customer: CustomerDto): Promise<Customer> {
+  async createCustomer(newCustomer: CustomerReqDto): Promise<CustomerResDto> {
     try {
-      return await prisma.customer.create({
-        data: customer,
+      const { email, ...customer } = newCustomer;
+      await this.validateExistingCustomer(email);
+      const customerSM = await ShopMonkeyService.createCustomer(customer);
+      await prisma.customer.create({
+        data: { ...newCustomer, shopMonkeyId: customerSM.id },
       });
+      return customerSM;
     } catch (error: any) {
       handleErrorResponse(error, 'Error creating the customer');
+    }
+  }
+
+  async validateExistingCustomer(email: string): Promise<void> {
+    try {
+      const customer = await prisma.customer.findUnique({
+        where: { email },
+      });
+      if (customer) {
+        throw new PrismaClientKnownRequestError(
+          'Customer with the requested email already exists',
+          { code: 'P2002', clientVersion: '5.22.0' }
+        );
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }
