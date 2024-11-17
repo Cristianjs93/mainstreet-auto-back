@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 
-function validateCustomerBody(schema: Joi.ObjectSchema) {
+function validateRequestBody(schema: Joi.ObjectSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
     if (error) {
@@ -13,4 +13,4 @@ function validateCustomerBody(schema: Joi.ObjectSchema) {
   };
 }
 
-export default validateCustomerBody;
+export default validateRequestBody;

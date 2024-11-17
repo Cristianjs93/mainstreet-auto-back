@@ -124,7 +124,6 @@ class ShopMonkeyService {
       );
       return response.data;
     } catch (error: any) {
-      console.log(error);
       handleErrorResponse(error, 'Error creating the appointment');
     }
   }

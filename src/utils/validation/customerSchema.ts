@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { CustomerType } from '../../interfaces/common/customerType.enum';
 
 export const customerSchema = Joi.object({
   firstName: Joi.string().required().messages({
@@ -17,11 +18,15 @@ export const customerSchema = Joi.object({
     'string.email': 'Customer email must be a valid email address',
     'any.required': 'Customer email is required',
   }),
-  customerType: Joi.string().valid('Customer', 'Fleet').required().messages({
-    'string.empty': 'Customer type cannot be empty',
-    'any.only': 'Customer type must be on of Customer or Fleet',
-    'any.required': 'Customer type is required',
-  }),
+  customerType: Joi.string()
+    .valid(...Object.values(CustomerType))
+    .required()
+    .messages({
+      'string.empty': 'Customer type cannot be empty',
+      'string.base': 'Customer type must be a string',
+      'any.only': 'Customer type must be on of Customer or Fleet',
+      'any.required': 'Customer type is required',
+    }),
   locationId: Joi.string().required().messages({
     'string.empty': 'Customer office cannot be empty',
     'string.base': 'Customer office must be a string',
