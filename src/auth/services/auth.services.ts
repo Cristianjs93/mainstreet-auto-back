@@ -45,8 +45,17 @@ class AuthService {
   }
 
   verifyToken(token: string): PayloadType {
-    const decoded = jwt.verify(token, this.SECRET) as PayloadType;
-    return decoded;
+    try {
+      const decoded = jwt.verify(token, this.SECRET) as PayloadType;
+      return decoded;
+    } catch (error: any) {
+      throw new Error(
+        JSON.stringify({
+          status: 401,
+          message: error.message,
+        })
+      );
+    }
   }
 
   signToken(payload: PayloadType): string {

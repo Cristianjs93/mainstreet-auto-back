@@ -64,6 +64,16 @@ class ShopMonkeyController {
       res.status(message.status).json(message);
     }
   }
+
+  async createAppointment(req: Request, res: Response): Promise<void> {
+    try {
+      const response = await ShopMonkeyService.createAppointment(req.body);
+      res.json(response);
+    } catch (error: any) {
+      const message = JSON.parse(error.message);
+      res.status(message.status).json(message);
+    }
+  }
 }
 
 export default new ShopMonkeyController();

@@ -33,14 +33,14 @@ const handleErrorResponse = (error: Error, defaultMessage: string) => {
             message: errorDetail.specifics[specificMessage],
           })
         );
+      } else {
+        throw new Error(
+          JSON.stringify({
+            status: 400,
+            message: errorDetail.default,
+          })
+        );
       }
-
-      throw new Error(
-        JSON.stringify({
-          status: 400,
-          message: errorDetail.default,
-        })
-      );
     }
   }
 

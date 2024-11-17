@@ -1,5 +1,7 @@
 import axiosInstance from '../utils/axiosInstance';
 import { CustomerResDto, CustomerSMDto } from '../interfaces/Customer';
+import { AppointmentReqDto, AppointmentResDto } from 'interfaces/Appointment';
+import { Location } from 'interfaces/Location';
 import handleErrorResponse from '../utils/handleErrorResponse';
 
 class ShopMonkeyService {
@@ -37,7 +39,7 @@ class ShopMonkeyService {
   public async getCustomers(): Promise<CustomerResDto[]> {
     try {
       await this.getToken();
-      const response = await axiosInstance.post('/customer/search', {
+      const { data: response } = await axiosInstance.post('/customer/search', {
         limit: 100,
       });
       return response.data;
@@ -49,7 +51,7 @@ class ShopMonkeyService {
   public async getCustomerById(id: string): Promise<CustomerResDto> {
     try {
       await this.getToken();
-      const response = await axiosInstance.get(`/customer/${id}`);
+      const { data: response } = await axiosInstance.get(`/customer/${id}`);
       return response.data;
     } catch (error: any) {
       handleErrorResponse(error, 'Error getting the customer');
@@ -71,20 +73,20 @@ class ShopMonkeyService {
     }
   }
 
-  public async getLocations(): Promise<any> {
+  public async getLocations(): Promise<Location[]> {
     try {
       await this.getToken();
-      const response = await axiosInstance.get('/location');
+      const { data: response } = await axiosInstance.get('/location');
       return response.data;
     } catch (error: any) {
       handleErrorResponse(error, 'Error getting locations');
     }
   }
 
-  public async getLocationById(id: string): Promise<any> {
+  public async getLocationById(id: string): Promise<Location> {
     try {
       await this.getToken();
-      const response = await axiosInstance.get(`/location/${id}`);
+      const { data: response } = await axiosInstance.get(`/location/${id}`);
       return response.data;
     } catch (error: any) {
       handleErrorResponse(error, 'Error getting the location');
@@ -94,7 +96,7 @@ class ShopMonkeyService {
   public async getAppointments(): Promise<any> {
     try {
       await this.getToken();
-      const response = await axiosInstance.get('/appointment');
+      const { data: response } = await axiosInstance.get('/appointment');
       return response.data;
     } catch (error: any) {
       handleErrorResponse(error, 'Error getting appointments');
@@ -104,10 +106,26 @@ class ShopMonkeyService {
   public async getAppointmentById(id: string): Promise<any> {
     try {
       await this.getToken();
-      const response = await axiosInstance.get(`/appointment/${id}`);
+      const { data: response } = await axiosInstance.get(`/appointment/${id}`);
       return response.data;
     } catch (error: any) {
       handleErrorResponse(error, 'Error getting the appointment');
+    }
+  }
+
+  public async createAppointment(
+    newAppointment: AppointmentReqDto
+  ): Promise<AppointmentResDto> {
+    try {
+      await this.getToken();
+      const { data: response } = await axiosInstance.post(
+        '/appointment',
+        newAppointment
+      );
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      handleErrorResponse(error, 'Error creating the appointment');
     }
   }
 }

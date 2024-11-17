@@ -16,7 +16,7 @@ export interface CustomerResDto {
   updatedDate: string;
   companyId: string;
   locationIds: string[];
-  customerType: string;
+  customerType: CustomerType;
   firstName: string;
   lastName: string;
   companyName: string;
