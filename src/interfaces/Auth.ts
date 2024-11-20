@@ -12,11 +12,12 @@ export interface AuthRequest extends Request {
   customer?: Customer;
 }
 
-export type LoginResponse = {
+export type SendOtpResponse = {
   message: string;
   customer: { id: string; email: string };
 };
 
-export type OtpValidationResponse = {
+export type LoginResponse = {
+  customer: { id: string; email: string; firstName: string; lastName: string };
   token: string;
 };
